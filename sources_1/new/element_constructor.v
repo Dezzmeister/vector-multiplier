@@ -4,10 +4,10 @@
 // Engineer: Joe Desmond
 // 
 // Create Date: 10/04/2019 01:15:30 PM
-// Design Name: Vector Multiplier
+// Design Name: Element Constructor
 // Module Name: element_constructor
 // Project Name: Vector Multiplier
-// Target Devices: Basys3 FPGA (Xilinx Artix 7)
+// Target Devices: Basys3 FPGA (Xilinx Artix-7)
 // Tool Versions: 
 // Description: Constructs elements of a given byte width from incoming bytes
 // 
