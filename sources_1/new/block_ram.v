@@ -56,7 +56,7 @@ module block_ram #(
 		if (reset) begin
 			`reset_memory(INIT_MEM_FILE, memory);
 		end else begin
-			if (write_en) begin
+			if (write_enable) begin
 				memory[addr] = data_in;
 			end else begin
 				data_out <= memory[addr];

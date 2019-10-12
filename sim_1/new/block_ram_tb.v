@@ -25,7 +25,7 @@ module block_ram_tb(
     );
 	
 	localparam ADDR_WIDTH = 4;
-	localparam DATA_WIDTH = 24;
+	localparam DATA_WIDTH = 3;
 	localparam DEPTH = 2 ** ADDR_WIDTH;
 	localparam INIT_MEM_FILE = "";
 	
@@ -50,6 +50,37 @@ module block_ram_tb(
 		.data_out(data_out)
 	);
 	
-	//TODO: Finish the testbench
+	initial begin
+		clk = 1'b0;
+		addr = 'b0;
+		write_enable = 1'b0;
+		data_in = 'b0;
+		#50 reset = 1'b1;
+		#50 reset = 1'b0;
+		write_enable = 1'b1;
+		data_in = 3'b110;
+		addr = 'b0;
+		#10 data_in = 3'b010;
+		addr = 4'b0001;
+		#10 data_in = 3'b100;
+		addr = 4'b0010;
+		#10 data_in = 3'b001;
+		addr = 4'b0011;
+		#10 data_in = 3'b111;
+		addr = 4'b0100;
+		#10 data_in = 'b0;
+		addr = 'b0;
+		write_enable = 1'b0;
+		#10 addr = 4'b0001;
+		#10 addr = 4'b0010;
+		#10 addr = 4'b0011;
+		#10 addr = 4'b0100;
+		#10 addr = 4'b0101;
+		#10 addr = 4'b0110;
+	end
+	
+	always begin
+		#5 clk = ~clk;
+	end
 	
 endmodule
