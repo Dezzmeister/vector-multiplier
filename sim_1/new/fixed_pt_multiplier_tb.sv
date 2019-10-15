@@ -19,8 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-`define print_result(num) $display(num + ": Success"); else $warning(num + ": Failure");
-
+`include "testbench_macros.vh"
 
 module fixed_pt_multiplier_tb(
 
@@ -29,33 +28,61 @@ module fixed_pt_multiplier_tb(
 	localparam OPERAND_WIDTH = 24;
 	localparam DECIMAL_PLACE = 8;
 	
-	reg [OPERAND_WIDTH-1:0] operand1;
-	reg [OPERAND_WIDTH-1:0] operand2;
-	wire [OPERAND_WIDTH-1:0] product;
+	reg signed [OPERAND_WIDTH-1:0] operand1;
+	reg signed [OPERAND_WIDTH-1:0] operand2;
+	wire signed [OPERAND_WIDTH-1:0] product;
 	
 	fixed_pt_multiplier #(
 		.OPERAND_WIDTH(OPERAND_WIDTH),
 		.DECIMAL_PLACE(DECIMAL_PLACE)
-	) DUT (
+	) DUT_1 (
 		.operand1(operand1),
 		.operand2(operand2),
 		.product(product)
 	);
 	
+	localparam OPERAND_WIDTH_2 = 64;
+	localparam DECIMAL_PLACE_2 = 32;
+	
+	reg signed [OPERAND_WIDTH_2-1:0] lg_operand1;
+	reg signed [OPERAND_WIDTH_2-1:0] lg_operand2;
+	wire signed [OPERAND_WIDTH_2-1:0] lg_product;
+	
+	fixed_pt_multiplier #(
+		.OPERAND_WIDTH(OPERAND_WIDTH_2),
+		.DECIMAL_PLACE(DECIMAL_PLACE_2)
+	) DUT_2 (
+		.operand1(lg_operand1),
+		.operand2(lg_operand2),
+		.product(lg_product)
+	);
+	
 	initial begin
-		operand1 = 'hAC00;
-		operand2 = 'hDC00;
-		#10 assert (product == 'h93D000) $display("1: Success"); else $warning("1: Failure");
-		operand1 = 'h1280;
-		operand2 = 'h1500;
-		#10 assert (product == 'h18480) $display("2: Success"); else $warning("2: Failure");
-		operand1 = 'hFF5433;
-		operand2 = 'h738;
-		#10 assert (product == 'h3327D0) $display("3: Success"); else $warning("3: Failure");
-		operand1 = 'hABCD;
-		operand2 = 'h738;
-		#10 assert (product == 'h4D82F) $display("4: Success"); else $warning("4: Failure");
+		lg_operand1 = 'h0;
+		lg_operand2 = 'h0;
+	
+		operand1 = 'hAC_00;
+		operand2 = 'hDC_00;
+		$display("Testing small operand multiplier: Q15.8");
+		#10 assert (product == 'h93D0_00) `print_result(1'd1);
+		operand1 = 'h12_80;
+		operand2 = 'h15_00;
+		#10 assert (product == 'h184_80) `print_result(2'd2);
+		operand1 = 'hFF54_33;
+		operand2 = 'h7_38;
+		#10 assert (product == 'hFB27_D0) `print_result(2'd3);
+		operand1 = 'hAB_CD;
+		operand2 = 'h7_38;
+		#10 assert (product == 'h4D8_2F) `print_result(3'd4);
 		
+		
+		#10 $display("Testing large operand multiplier: Q31.32");
+		lg_operand1 = 'h0_ABCDEE;
+		lg_operand2 = 'h0_1223344;
+		#10 assert (lg_product == 'h0_0000C2C1) `print_result(3'd5);
+		lg_operand1 = 'hCAFE_A900FCB3;
+		lg_operand2 = 'h7E_17384000;
+		#10 assert (lg_product == 'h63FBC0_AA201945) `print_result(3'd6);
 	end
 	
 endmodule

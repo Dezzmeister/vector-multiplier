@@ -1,0 +1,1 @@
+`define print_result(num) $display("%d: Success", num); else $warning("%d: Failure", num);
