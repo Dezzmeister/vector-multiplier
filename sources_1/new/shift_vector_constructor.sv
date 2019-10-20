@@ -45,7 +45,7 @@ module shift_vector_constructor #(
 	reg [COUNT_WIDTH-1:0] count;										//The current element to write to in the current vector
 	
 	integer i;
-	always @(posedge clk) begin
+	always @(posedge clk or reset) begin
 		if (reset) begin
 			elements_received <= 'b0;
 			addr <= 'b0;
@@ -60,7 +60,7 @@ module shift_vector_constructor #(
 			count <= 'b0;
 		end else begin
 			if (enabled) begin
-				addr <= addr + 1'b1;
+				addr <= (elements_received == expected_elements - 1'b1) ? 'b0 : addr + 1'b1;
 				
 				if (delay == 1'b0) begin
 					vector[count] <= element_in;
